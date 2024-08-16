@@ -5,7 +5,7 @@ datasources:
   - name: Prometheus
     type: prometheus
     uid: prometheus
-    url: http://localhost:9090
+    url: http://localhost:9009/prometheus
     jsonData:
       timeInterval: 60s
       exemplarTraceIdDestinations:

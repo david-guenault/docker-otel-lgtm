@@ -2,4 +2,4 @@
 
 RELEASE=${1:-latest}
 
-docker buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:${RELEASE}
+docker --debug buildx build --no-cache -f docker/Dockerfile docker --tag box4prod/lgtm:${RELEASE}

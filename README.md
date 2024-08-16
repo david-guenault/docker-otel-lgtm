@@ -1,38 +1,56 @@
-# docker-otel-lgtm
+# docker-lgtm
 
 An OpenTelemetry backend in a Docker image.
 
-![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana](img/overview.png)
+![Components included in the Docker image: OpenTelemetry collector, Mimir, Tempo, Loki, Grafana](img/overview.png)
 
-The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo, and testing environments. If you are looking for a production-ready, out-of-the box solution to monitor applications and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus, you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
+The `box4prod/lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo, and testing environments. If you are looking for a production-ready, out-of-the box solution to monitor applications and minimize MTTR (mean time to resolution) with OpenTelemetry and Mimir, you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
 
-## Documentation
+Most of the work was done on the original repository at: https://github.com/grafana/docker-otel-lgtm. This fork just implement mimir in place of prometheus. 
 
-* Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/)
 
-## Get the Docker image
-
-The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/otel-lgtm>
-
-## Run the Docker image
+## Build the Docker image from scratch
 
 ```sh
-# Unix/Linux
-./run-lgtm.sh
-
-# Windows (PowerShell)
-./run-lgtm
+make build
 ```
 
-## Run lgtm in kubernetes
+## Run the container
 
 ```sh
-# create k8s resources
-kubectl apply -f k8s/lgtm.yaml
-
-# port forwarding
-kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318
+make start
 ```
+
+## Stop container
+
+```sh
+make stop
+```
+
+## Clean up
+
+```sh
+make clean
+```
+
+
+## exposed ports
+
+|application|ports|description|exposed ?|
+|---|---|---|---|
+|tempo|TCP/4417|distributor receivers otlp grpc endpoint port|N|
+|tempo|TCP/4418|distributor receivers otlp http endpoint port|N|
+|tempo|TCP/3200|http listen port|Y|
+|tempo|TCP/9096|grpc listen port|N|
+|mimir|TCP/7946|ring memberlist port|N|
+|mimir|TCP/9090|http listen port|Y|
+|mimir|TCP/9091|grpc listen port|N|
+|loki|TCP/3100|http listen port|Y|
+|loki|TCP/9095||N|
+|grafana|TCP/3000|grafana serveer http port|Y|
+|opetelemetry collector|TCP/4317|receiver otlp grpc|Y|
+|opetelemetry collector|TCP/4318|receiver otlp http|Y|
+|opetelemetry collector|TCP/8888|service telemetry prometheus exporter|N|
 
 ## Send OpenTelemetry Data
 
@@ -48,12 +66,6 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 
 Log in to [http://localhost:3000](http://localhost:3000) with user _admin_ and password _admin_.
 
-## Build the Docker image from scratch
-
-```sh
-cd docker/
-docker build . -t grafana/otel-lgtm
-```
 
 ## Build and run the example app
 
@@ -62,9 +74,6 @@ Run the example REST service:
 ```sh
 # Unix/Linux
 ./run-example.sh
-
-# Windows (PowerShell)
-./run-example
 ```
 
 Generate traffic:
@@ -72,9 +81,6 @@ Generate traffic:
 ```sh
 # Unix/Linux
 ./generate-traffic.sh
-
-# Windows (PowerShell)
-./generate-traffic
 ```
 
 ## Run example apps in different languages

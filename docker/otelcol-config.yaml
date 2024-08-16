@@ -6,6 +6,7 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
   prometheus/collector:
+    # internal instrumentation ? 
     config:
       scrape_configs:
         - job_name: 'opentelemetry-collector'
@@ -17,7 +18,7 @@ processors:
 
 exporters:
   otlphttp/metrics:
-    endpoint: http://localhost:9090/api/v1/otlp
+    endpoint: http://localhost:9009/api/v1/otlp
     tls:
       insecure: true
   otlphttp/traces:
@@ -34,21 +35,22 @@ exporters:
     verbosity: detailed
   logging/logs:
     verbosity: detailed
-
+  debug:
 service:
+  telemetry:
+    metrics:
+      addresse: 0.0.0.0:8888
+      level: detailled
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/traces]
-      #exporters: [otlphttp/traces,logging/traces]
+      exporters: [otlphttp/traces,logging/traces]
     metrics:
       receivers: [otlp,prometheus/collector]
       processors: [batch]
-      exporters: [otlphttp/metrics]
-      #exporters: [otlphttp/metrics,logging/metrics]
+      exporters: [otlphttp/metrics,logging/metrics]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/logs]
-      #exporters: [otlphttp/logs,logging/logs]
+      exporters: [otlphttp/logs,logging/logs]

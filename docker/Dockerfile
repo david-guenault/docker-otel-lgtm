@@ -1,9 +1,9 @@
-FROM redhat/ubi9
+FROM redhat/ubi9-minimal 
 
 ENV GRAFANA_VERSION="11.1.3"
-ENV PROMETHEUS_VERSION="2.53.1"
 ENV TEMPO_VERSION="2.5.0"
 ENV LOKI_VERSION="3.1.0"
+ENV MIMIR_VERSION="2.13.0"
 ENV OPENTELEMETRY_COLLECTOR_VERSION="0.106.1"
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
@@ -15,17 +15,21 @@ ENV TARGETARCH=${TARGETARCH}
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
 
-RUN yum install -y unzip jq procps dos2unix
+RUN mkdir -p /data/mimir /data/mimir/blocks /data/mimir/tsdb-sync /data/mimir/tsdb /data/mimir rules
+
+RUN microdnf install -y \
+    unzip jq procps dos2unix net-tools vim tar
 
 RUN curl -sOL https://dl.grafana.com/oss/release/grafana-$GRAFANA_VERSION.linux-${TARGETARCH}.tar.gz && \
     tar xfz grafana-$GRAFANA_VERSION.linux-${TARGETARCH}.tar.gz && \
     rm grafana-$GRAFANA_VERSION.linux-${TARGETARCH}.tar.gz && \
     mv grafana-v$GRAFANA_VERSION grafana/
 
-RUN curl -sOL https://github.com/prometheus/prometheus/releases/download/v$PROMETHEUS_VERSION/prometheus-$PROMETHEUS_VERSION.linux-${TARGETARCH}.tar.gz && \
-    tar xfz prometheus-$PROMETHEUS_VERSION.linux-${TARGETARCH}.tar.gz && \
-    mv prometheus-$PROMETHEUS_VERSION.linux-${TARGETARCH} prometheus && \
-    rm prometheus-$PROMETHEUS_VERSION.linux-${TARGETARCH}.tar.gz
+RUN mkdir mimir && \
+    cd mimir && \
+    curl -sOL https://github.com/grafana/mimir/releases/download/mimir-${MIMIR_VERSION}/mimir-linux-${TARGETARCH} && \
+    mv mimir-linux-${TARGETARCH} mimir && \
+    chmod +x mimir
 
 RUN curl -sOL https://github.com/grafana/tempo/releases/download/v$TEMPO_VERSION/tempo_${TEMPO_VERSION}_linux_${TARGETARCH}.tar.gz && \
     mkdir tempo && \
@@ -42,21 +46,25 @@ RUN curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases
     tar xfz otelcol-contrib_${OPENTELEMETRY_COLLECTOR_VERSION}_linux_${TARGETARCH}.tar.gz -C otelcol-contrib/ && \
     rm otelcol-contrib_${OPENTELEMETRY_COLLECTOR_VERSION}_linux_${TARGETARCH}.tar.gz
 
-COPY prometheus.yaml .
-COPY run-prometheus.sh .
 COPY grafana-datasources.yaml ./grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml ./grafana/conf/provisioning/dashboards/
 COPY grafana-dashboard-red-metrics-classic.json .
 COPY grafana-dashboard-red-metrics-native.json .
 COPY grafana-dashboard-jvm-metrics.json .
 COPY run-grafana.sh .
+
 COPY loki-config.yaml .
 COPY run-loki.sh .
+
 COPY tempo-config.yaml .
 COPY run-tempo.sh .
+
+COPY mimir-config.yaml .
+COPY run-mimir.sh .
+
 COPY otelcol-config.yaml .
 COPY run-otelcol.sh .
-COPY run-all.sh .
-RUN find . -maxdepth 1 -type f | xargs dos2unix
 
-CMD /otel-lgtm/run-all.sh
+COPY run-all.sh .
+
+CMD ["/otel-lgtm/run-all.sh"]
