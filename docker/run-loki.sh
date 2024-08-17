@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./loki/loki-linux-${TARGETARCH}  --config.file=./loki-config.yaml > /dev/null 2>&1
+./loki/loki-linux-${TARGETARCH}  --config.file=./loki-config.yaml > /data/logs/loki.log 2>&1

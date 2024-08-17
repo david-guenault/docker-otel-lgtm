@@ -2,4 +2,4 @@
 
 ./otelcol-contrib/otelcol-contrib \
 	--config=file:./otelcol-config.yaml \
-	> /dev/null 2>&1
+	> /data/logs/otelcol.log 2>&1

@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir -p /data/logs
 
 ./run-grafana.sh &
 ./run-loki.sh &

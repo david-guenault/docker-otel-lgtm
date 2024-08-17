@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./tempo/tempo --config.file=./tempo-config.yaml > /dev/null 2>&1
+./tempo/tempo --config.file=./tempo-config.yaml > /data/logs/tempo.log 2>&1

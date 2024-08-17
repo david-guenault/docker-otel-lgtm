@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd ./grafana
-./bin/grafana server > /dev/null 2>&1
+./bin/grafana server > /data/logs/grafana.log 2>&1
