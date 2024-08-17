@@ -1,6 +1,4 @@
 .idea
 venv/
 .venv
-/container/grafana/*
-/container/loki/*
-/container/prometheus/*
+/container/*
