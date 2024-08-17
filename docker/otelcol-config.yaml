@@ -18,7 +18,7 @@ processors:
 
 exporters:
   otlphttp/metrics:
-    endpoint: http://localhost:9009/api/v1/otlp
+    endpoint: http://localhost:9009/otlp
     tls:
       insecure: true
   otlphttp/traces:
@@ -39,8 +39,8 @@ exporters:
 service:
   telemetry:
     metrics:
-      addresse: 0.0.0.0:8888
-      level: detailled
+      address: 0.0.0.0:8888
+      level: detailed
   pipelines:
     traces:
       receivers: [otlp]
