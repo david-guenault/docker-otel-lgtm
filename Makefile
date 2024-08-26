@@ -12,6 +12,9 @@ clean:
 	@-docker rmi box4prod/lgtm:latest
 	@-docker rmi $$(docker images | grep none | awk '{print $$3}')
 
+ps: 
+	@-docker ps | grep -i lgtm
+
 system_prune:
 	@-docker system prune -f
 
