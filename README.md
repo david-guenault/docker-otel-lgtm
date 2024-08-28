@@ -2,9 +2,9 @@
 
 An OpenTelemetry backend in a Docker image.
 
-![Components included in the Docker image: OpenTelemetry collector, Mimir, Tempo, Loki, Grafana](img/overview.png)
+![Components included in the Docker image: OpenTelemetry collector, Mimir, Tempo, Loki, Grafana](./img/overview.png)
 
-The `box4prod/lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo, and testing environments. If you are looking for a production-ready, out-of-the box solution to monitor applications and minimize MTTR (mean time to resolution) with OpenTelemetry and Mimir, you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
+The `ghcr.io/david-guenault/docker-otel-lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo, and testing environments. If you are looking for a production-ready, out-of-the box solution to monitor applications and minimize MTTR (mean time to resolution) with OpenTelemetry and Mimir, you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
 
 Most of the work was done on the original repository at: https://github.com/grafana/docker-otel-lgtm. This fork just implement mimir in place of prometheus. 
 
@@ -33,6 +33,13 @@ make stop
 make clean
 ```
 
+## build docker image
+
+```sh
+make build
+```
+
+You can customize image name in the Makefile. 
 
 ## exposed ports
 
