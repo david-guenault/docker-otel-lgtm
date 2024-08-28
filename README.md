@@ -9,12 +9,6 @@ The `ghcr.io/david-guenault/docker-otel-lgtm` Docker image is an open source bac
 Most of the work was done on the original repository at: https://github.com/grafana/docker-otel-lgtm. This fork just implement mimir in place of prometheus. 
 
 
-## Build the Docker image from scratch
-
-```sh
-make build
-```
-
 ## Run the container
 
 ```sh
