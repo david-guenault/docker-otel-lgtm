@@ -1,13 +1,14 @@
 RELEASE=0.0.1
 ORG=ghcr.io/david-guenault
 NAME=docker-otel-lgtm
+CONTAINER=lgtm
 
 build:
 	docker --debug buildx build --no-cache -f docker/Dockerfile docker --tag $(ORG)/$(NAME):$(RELEASE)
 
 start:
 	docker run -d \
-	--name lgtm \
+	--name $(CONTAINER) \
 	-p 3000:3000 \
 	-p 4317:4317 \
 	-p 4318:4318 \
@@ -26,14 +27,17 @@ push:
 	docker push $(ORG)/$(NAME):$(RELEASE)
 
 stop:
-	@-docker stop lgtm
+	@-docker stop $(CONTAINER)
 
 clean: 
 	@-rm -Rf container
 	@-docker rmi $(ORG)/$(NAME):$(RELEASE)
 
 ps: 
-	@-docker ps | grep -i lgtm
+	@-docker ps | grep -i $(CONTAINER)
+
+logs:
+	@-docker logs -f $(CONTAINER)
 
 system_prune:
 	@-docker system prune -f
