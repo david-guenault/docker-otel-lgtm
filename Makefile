@@ -1,6 +1,6 @@
 RELEASE=0.0.1
 ORG=ghcr.io/david-guenault
-NAME=lgtm
+NAME=docker-otel-lgtm
 
 build:
 	docker --debug buildx build --no-cache -f docker/Dockerfile docker --tag $(ORG)/$(NAME):$(RELEASE)
@@ -21,6 +21,9 @@ start:
 	-v $PWD/container/mimir:/data/mimir \
 	-e GF_PATHS_DATA=/data/grafana \
 	$(ORG)/$(NAME):$(RELEASE)	
+
+push:
+	docker push $(ORG)/$(NAME):$(RELEASE)
 
 stop:
 	@-docker stop lgtm
