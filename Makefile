@@ -16,9 +16,9 @@ start:
 	-p 3200:3200 \
 	--rm \
 	-ti \
-	-v $PWD/container/grafana:/data/grafana \
-	-v $PWD/container/loki:/loki \
-	-v $PWD/container/mimir:/data/mimir \
+	-v $$PWD/container/grafana:/data/grafana \
+	-v $$PWD/container/loki:/loki \
+	-v $$PWD/container/mimir:/data/mimir \
 	-e GF_PATHS_DATA=/data/grafana \
 	$(ORG)/$(NAME):$(RELEASE)	
 
