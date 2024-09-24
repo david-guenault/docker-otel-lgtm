@@ -1,4 +1,4 @@
-FROM redhat/ubi9-minimal:9.0.0-1471
+FROM redhat/ubi9-minimal:9.4-1227.1726694542
 
 ENV GRAFANA_VERSION="11.1.3"
 ENV TEMPO_VERSION="2.5.0"
